@@ -8,6 +8,67 @@ import java.util.Arrays;
  */
 public class SortUtils {
 
+    /**
+     * 选择排序
+     *
+     * @param a
+     */
+    public static void selectSort(int a[]) {
+        int len = a.length;
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                if (a[i] > a[j]) {
+                    a[i] = a[i] ^ a[j];
+                    a[j] = a[j] ^ a[i];
+                    a[i] = a[i] ^ a[j];
+                }
+            }
+        }
+    }
+
+    /**
+     * 插入排序
+     *
+     * @param a
+     */
+    public static void insertSort(int a[]) {
+        int len = a.length;
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j < i; j++) {
+                if (a[i] < a[j]) {
+                    a[i] = a[i] ^ a[j];
+                    a[j] = a[j] ^ a[i];
+                    a[i] = a[i] ^ a[j];
+                }
+            }
+        }
+    }
+
+    /**
+     * Shell Sort
+     *
+     * @param a
+     */
+    public static void shellSort(int a[]) {
+        int len = a.length;
+        int h = 1;
+        // 3x+1 increment sequence:  1, 4, 13, 40, 121, 364, 1093, ...
+        while (h < len / 3)
+            h = 3 * h + 1;
+        while (h >= 1) {
+            for (int i = h; i < len; i++) {
+                for (int j = i; j >= h; j -= h) {
+                    if (a[j] < a[j - h]) {
+                        a[j] = a[j] ^ a[j - h];
+                        a[j - h] = a[j - h] ^ a[j];
+                        a[j] = a[j] ^ a[j - h];
+                    }
+                }
+            }
+            h /= 3;
+        }
+    }
+
     private static int partition(int a[], int i, int j) {
         int key = a[i];
         while (i < j) {
@@ -46,11 +107,13 @@ public class SortUtils {
     }
 
 
-
     public static void main(String args[]) {
         int arr[] = {72, 6, 57, 88, 60, 42, 83, 43, 48, 85, 3, 5, 45, 32, 11, 2, 1, 99, 71};
         System.out.println(Arrays.toString(arr));
-        quickSort(arr);
+//        quickSort(arr);
+//        selectSort(arr);
+//        insertSort(arr);
+        shellSort(arr);
         System.out.println(Arrays.toString(arr));
     }
 
