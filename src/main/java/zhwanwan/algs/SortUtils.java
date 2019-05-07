@@ -91,6 +91,12 @@ public class SortUtils {
         return i;
     }
 
+    /**
+     * 快速排序
+     * @param arr
+     * @param from
+     * @param to
+     */
     private static void quickSort(int arr[], int from, int to) {
         if (from < to) { //递归结束的条件
             //1.分区
