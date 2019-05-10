@@ -69,6 +69,80 @@ public class SortUtils {
         }
     }
 
+    /**
+     * Merge Sort
+     * 1.Divide array into two halves
+     * 2.Recursively sort each half
+     * 3.Merge two halves.
+     *
+     * @param arr
+     */
+    public static void mergeSort(int arr[]) {
+        int aux[] = new int[arr.length];
+        mSort(arr, aux, 0, arr.length - 1);
+        assert isSorted(arr);
+    }
+
+    private static void mSort(int arr[], int aux[], int lo, int hi) {
+        if (lo >= hi)
+            return;
+        int mid = lo + (hi - lo) / 2;
+        mSort(arr, aux, lo, mid);
+        mSort(arr, aux, mid + 1, hi);
+        merge(arr, aux, lo, mid, hi);
+    }
+
+    private static void merge(int arr[], int aux[], int lo, int mid, int hi) {
+        assert isSorted(arr, lo, mid);
+        assert isSorted(arr, mid + 1, hi);
+        //copy arr to aux
+        for (int k = lo; k <= hi; k++)
+            aux[k] = arr[k];
+
+        //merge back to arr
+        int i = lo, j = mid + 1;
+        for (int k = lo; k <= hi; k++) {
+            if (i > mid)
+                arr[k] = aux[j++];
+            else if (j > hi)
+                arr[k] = aux[i++];
+            else if (aux[i] > aux[j])
+                arr[k] = aux[j++];
+            else
+                arr[k] = aux[i++];
+        }
+        assert isSorted(arr, lo, hi);
+    }
+
+    private static boolean isSorted(int arr[]) {
+        return isSorted(arr, 0, arr.length - 1);
+    }
+
+    private static boolean isSorted(int arr[], int lo, int hi) {
+        for (int i = lo + 1; i <= hi; i++)
+            if (arr[i] < arr[i - 1])
+                return false;
+        return true;
+    }
+
+    /**
+     * 快速排序
+     *
+     * @param arr
+     * @param from
+     * @param to
+     */
+    private static void quickSort(int arr[], int from, int to) {
+        if (from < to) { //递归结束的条件
+            //1.分区
+            int base = partition(arr, from, to);
+            //2.对左边进行排序
+            quickSort(arr, from, base - 1);
+            //3.对右边进行排序
+            quickSort(arr, base + 1, to);
+        }
+    }
+
     private static int partition(int a[], int i, int j) {
         int key = a[i];
         while (i < j) {
@@ -91,23 +165,6 @@ public class SortUtils {
         return i;
     }
 
-    /**
-     * 快速排序
-     * @param arr
-     * @param from
-     * @param to
-     */
-    private static void quickSort(int arr[], int from, int to) {
-        if (from < to) { //递归结束的条件
-            //1.分区
-            int base = partition(arr, from, to);
-            //2.对左边进行排序
-            quickSort(arr, from, base - 1);
-            //3.对右边进行排序
-            quickSort(arr, base + 1, to);
-        }
-    }
-
     public static void quickSort(int arr[]) {
         quickSort(arr, 0, arr.length - 1);
     }
@@ -119,7 +176,8 @@ public class SortUtils {
 //        quickSort(arr);
 //        selectSort(arr);
 //        insertSort(arr);
-        shellSort(arr);
+//        shellSort(arr);
+        mergeSort(arr);
         System.out.println(Arrays.toString(arr));
     }
 
