@@ -16,21 +16,7 @@ public class BinarySearch {
      * @return
      */
     public static int binarySearch(int[] a, int key) {
-        int low = 0;
-        int high = a.length - 1;
-        //当low <= high--继续查找
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if (key > a[mid]) {
-                low = mid + 1;
-            } else if (key < a[mid]) {
-                high = mid - 1;
-            } else {
-                return mid;
-            }
-        }
-        //low > high--查找失败
-        return -1;
+        return binarySearchWile(a, key, 0, a.length - 1);
     }
 
     /**
@@ -59,24 +45,52 @@ public class BinarySearch {
     }
 
     /**
+     * 递归实现
+     *
      * @param a    数组
      * @param key  被查找元素值
      * @param low  开始位置
      * @param high 结束位置
      * @return 查找元素的下标
      */
-    public static int binarySearch(int[] a, int key, int low, int high) {
+    private static int binarySearchRecursion(int[] a, int key, int low, int high) {
         if (low > high)
             return -1;
         int mid = low + (high - low) / 2;
-        if (key < a[mid]) {
-            return binarySearch(a, key, low, mid - 1);
-        } else if (key > a[mid])
-            return binarySearch(a, key, mid + 1, high);
-        else {
+        if (key < a[mid])
+            return binarySearchRecursion(a, key, low, mid - 1);
+        else if (key > a[mid])
+            return binarySearchRecursion(a, key, mid + 1, high);
+        else
             return mid;
-        }
+
     }
+
+    /**
+     * 非递归实现
+     *
+     * @param a
+     * @param key
+     * @param fromIndex
+     * @param toIndex
+     * @return
+     */
+    private static int binarySearchWile(int[] a, int key, int fromIndex, int toIndex) {
+        int low = fromIndex;
+        int high = toIndex - 1;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            int midVal = a[mid];
+            if (midVal < key)
+                low = mid + 1;
+            else if (midVal > key)
+                high = mid - 1;
+            else
+                return mid;
+        }
+        return -(low + 1);
+    }
+
 
     /**
      * rank方法--recursive
@@ -102,8 +116,10 @@ public class BinarySearch {
     public static void main(String[] args) {
         int[] a = {9, 33, 4, 2, 56, 24, 22};
         Arrays.sort(a);
-        System.out.println(Arrays.toString(a));
-        System.out.println(rank(a, 111));
-        System.out.println(binarySearch(a, 22, 0, a.length - 1));
+//        System.out.println(Arrays.toString(a));
+//        System.out.println(rank(a, 111));
+        System.out.println(binarySearchWile(a, 22, 0, a.length - 1));
+        int i = 0x7fffffff;
+        System.out.println(Integer.toBinaryString(i));
     }
 }

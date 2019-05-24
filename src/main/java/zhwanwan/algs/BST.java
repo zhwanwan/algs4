@@ -1,5 +1,7 @@
 package zhwanwan.algs;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 /**
@@ -125,7 +127,9 @@ public class BST<Key extends Comparable<Key>, Value> {
 
     //删除指定的key
     public void delete(Key key) {
-
+        if (key == null)
+            throw new IllegalArgumentException("calls to delete() with a null key");
+        root = delete(root, key);
     }
 
     private Node delete(Node x, Key key) {
@@ -133,9 +137,9 @@ public class BST<Key extends Comparable<Key>, Value> {
             return null;
         int cmp = key.compareTo(x.key);
         if (cmp < 0)
-            return delete(x.left, key);
+            x.left = delete(x.left, key);
         else if (cmp > 0)
-            return delete(x.right, key);
+            x.right = delete(x.right, key);
         else {
             if (x.left == null)
                 return x.right;
@@ -144,9 +148,10 @@ public class BST<Key extends Comparable<Key>, Value> {
             else {
                 //左右都存在结点
                 Node t = x;
+                x = min(t.right);
                 x.left = t.left;
-                x.key = min(x.right);
                 x.right = deleteMin(t.right);
+
             }
         }
         x.size = 1 + size(x.left) + size(x.right);
@@ -154,15 +159,15 @@ public class BST<Key extends Comparable<Key>, Value> {
 
     }
 
-    public Key min() {
+    public Node min() {
         if (isEmpty())
             throw new NoSuchElementException("Symbol table empty");
         return min(root);
     }
 
-    private Key min(Node x) {
+    private Node min(Node x) {
         if (x.left == null)
-            return x.key;
+            return x;
         return min(x.left);
     }
 
@@ -196,5 +201,49 @@ public class BST<Key extends Comparable<Key>, Value> {
         else
             return size(x.left);
 
+    }
+
+    //树的高度(1-node tree has height 0)
+    public int height() {
+        return height(root);
+    }
+
+    private int height(Node x) {
+        if (x == null)
+            return -1;
+        return 1 + Math.max(height(x.left), height(x.right));
+    }
+
+    /**
+     * @return the keys in the BST in level order traversal
+     */
+    public Iterable<Key> levelOrder() {
+        Deque<Key> keys = new LinkedList<>();
+        Deque<Node> queue = new LinkedList<>();
+        queue.push(root);
+        while (!queue.isEmpty()) {
+            Node x = queue.poll();
+            if (x == null) continue;
+            keys.push(x.key);
+            queue.push(x.left);
+            queue.push(x.right);
+        }
+        return keys;
+    }
+
+    public boolean isBST() {
+        return isBST(root, null, null);
+    }
+
+
+    // Credit: Bob Dondero's elegant solution
+    private boolean isBST(Node x, Key min, Key max) {
+        if (x == null)
+            return true;
+        if (min != null && x.key.compareTo(min) <= 0)
+            return false;
+        if (max != null && x.key.compareTo(max) >= 0)
+            return false;
+        return isBST(x.left, min, x.key) && isBST(x.right, x.key, max);
     }
 }
