@@ -1,8 +1,6 @@
 package zhwanwan.algs;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * ZOOM-2019.05
@@ -39,8 +37,8 @@ public class ExpressionCalculation {
 
     public static int getExpressionValueV2(String exp) {
         char[] chars = (exp + "$").replace(" ", "").toCharArray();
-        Stack<Integer> ods = new Stack<>();
-        Stack<Character> ors = new Stack<>();
+        Deque<Integer> ods = new LinkedList<>();
+        Deque<Character> ors = new LinkedList<>();
         StringBuilder sb = new StringBuilder();
         for (int i = 0, len = chars.length; i < len; i++) {
             if (chars[i] >= '0' && chars[i] <= '9') {
