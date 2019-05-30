@@ -70,7 +70,7 @@ public class AVLTreeST<Key extends Comparable<Key>, Value> {
      * Returns value associated with the given key in the subtree of
      * null if no such key
      *
-     * @param x   the substee
+     * @param x   the subtree
      * @param key the key
      * @return value associated with the given key in the subtree
      */
