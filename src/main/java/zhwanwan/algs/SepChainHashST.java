@@ -1,41 +1,47 @@
 package zhwanwan.algs;
 
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
- * SCHST is short for SeparateChainingHashST which represents a symbol table of
+ * SepChainHashST is short for SeparateChainingHashST which represents a symbol table of
  * generic key-value pairs.
  *
  * @author zhwanwan
  * @create 2019-05-24 11:26 PM
  */
-public class SCHST<Key, Value> {
+public class SepChainHashST<Key, Value> {
 
     private static final int INIT_CAPACITY = 4;
 
     private int n;   // number of key-value pairs
     private int m;   // hash table size
-    private SSST<Key, Value>[] st; // array of linked-list symbol tables
+    private SeqSearchST<Key, Value>[] st; // array of linked-list symbol tables
 
-    public SCHST(int m) {
+    public SepChainHashST(int m) {
         this.m = m;
-        st = new SSST[m];
+        st = new SeqSearchST[m];
         for (int i = 0; i < m; i++) {
-            st[i] = new SSST<Key, Value>();
+            st[i] = new SeqSearchST<Key, Value>();
         }
     }
 
-    public SCHST() {
+    public SepChainHashST() {
         this(INIT_CAPACITY);
     }
 
+    // resize the hash table
     private void resize(int chains) {
-        SCHST<Key, Value> temp = new SCHST<>(chains);
+        SepChainHashST<Key, Value> temp = new SepChainHashST<>(chains);
         for (int i = 0; i < m; i++) {
             for (Key key : st[i].keys()) {
-
+                temp.put(key, st[i].get(key));
             }
         }
+        this.m = temp.m;
+        this.n = temp.n;
+        this.st = temp.st;
     }
 
     //hash value between 0 and m-1
@@ -65,10 +71,11 @@ public class SCHST<Key, Value> {
     }
 
     public void put(Key key, Value val) {
+
         if (key == null)
             throw new IllegalArgumentException("argument to put() is null");
         if (val == null) {
-//            delete(key);
+            delete(key);
             return;
         }
         if (n >= 10 * m)
@@ -100,6 +107,19 @@ public class SCHST<Key, Value> {
                 queue.enqueue(key);
         }
         return queue;
+    }
+
+    public static void main(String[] args) {
+
+        SepChainHashST<String, Integer> st = new SepChainHashST<>();
+        for (int i = 0; !StdIn.isEmpty(); i++) {
+            String key = StdIn.readString();
+            st.put(key, i);
+        }
+
+        // print keys
+        for (String s : st.keys())
+            StdOut.println(s + " " + st.get(s));
     }
 
 }

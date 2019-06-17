@@ -1,15 +1,19 @@
 package zhwanwan.algs;
 
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
- * SSST is short for SequentialSearchST which represents an (unordered)
+ * SeqSearchST is short for SequentialSearchST which represents an (unordered)
  * symbol table of generic key-value pairs.
  *
  * @author zhwanwan
  * @create 2019-05-24 4:27 PM
  */
-public class SSST<Key, Value> {
+public class SeqSearchST<Key, Value> {
 
     private int n;       // number of key-value pairs
     private Node first;  // the linked list of key-value pairs
@@ -27,7 +31,7 @@ public class SSST<Key, Value> {
         }
     }
 
-    public SSST() {
+    public SeqSearchST() {
     }
 
     /**
@@ -76,6 +80,7 @@ public class SSST<Key, Value> {
      * @param val
      */
     public void put(Key key, Value val) {
+
         if (key == null)
             throw new IllegalArgumentException("argument to put() is null");
         if (val == null) {
@@ -137,10 +142,23 @@ public class SSST<Key, Value> {
     }
 
     public Iterable<Key> keys() {
-        Queue<Key> queue = new Queue<>();
+        Deque<Key> queue = new ArrayDeque<>();
         for (Node x = first; x != null; x = x.next)
-            queue.enqueue(x.key);
+            queue.offer(x.key);
         return queue;
+    }
+
+    public static void main(String[] args) {
+
+        SeqSearchST<String, Integer> st = new SeqSearchST<>();
+
+        for (int i = 0; !StdIn.isEmpty(); i++) {
+            String key = StdIn.readString();
+            st.put(key, i);
+        }
+        for (String s : st.keys())
+            StdOut.println(s + " " + st.get(s));
+
     }
 
 
